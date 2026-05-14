@@ -1,4 +1,4 @@
-# React Enterprise Directory Explorer
+# Org Atlas Directory
 
 A legacy React 16 portfolio demo for browsing connected enterprise data: companies, projects, employees, and addresses. The app uses a local JSON data source and Redux-managed navigation state to show master-detail relationships across multiple screens.
 

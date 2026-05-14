@@ -1,6 +1,7 @@
 {
   "homepage": "./",
-  "name": "tick42_demo",
+  "name": "react-enterprise-directory-explorer",
+  "description": "React 16 enterprise directory demo with Redux state flow, local JSON API data, and master-detail browsing across companies, projects, employees, and addresses.",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

@@ -809,7 +809,8 @@
         "department": "Books",
         "employeesId": [
           "2a32c2a6-2bd5-4f94-aa44-f4d3179bd320",
-          "89f5dfdd-58f2-44d3-b2f9-32aa49206ada"
+          "89f5dfdd-58f2-44d3-b2f9-32aa49206ada",
+          "2aa7071f-a09d-4c93-8546-300ead403eb0"
         ],
         "companyId": "975335ac-85b4-4740-b1fa-c88cdb5798e1"
       },

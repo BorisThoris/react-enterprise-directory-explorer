@@ -3,8 +3,11 @@ import { Creators } from "./actions";
 
 const requestInitialDataAction = Creators.requestInitialData;
 const receiveInitialDataAction = Creators.receiveInitialData;
+const failInitialDataAction = Creators.failInitialData;
 
 const startProjectUpdate = Creators.startProjectUpdate;
+
+const getResponseData = (responseData) => responseData.db || responseData;
 
 const fetchInitialData = () => {
   return (dispatch) => {
@@ -13,12 +16,20 @@ const fetchInitialData = () => {
     /*eslint-disable */
     //suppress all warnings between comments
     return fetch(`http://localhost:5000/db`)
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Unable to load directory data.");
+        }
+
+        return response.json();
+      })
       .then((json) => {
-        const responseData = json;
-        const data = responseData.db;
+        const data = getResponseData(json);
 
         dispatch(receiveInitialDataAction(data));
+      })
+      .catch((error) => {
+        dispatch(failInitialDataAction(error.message));
       });
     /*eslint-enable */
   };
@@ -37,11 +48,20 @@ const updateProject = (passedState) => {
       },
       body: JSON.stringify(passedState),
     })
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Unable to update directory data.");
+        }
+
+        return response.json();
+      })
       .then((json) => {
-        const responseData = json;
+        const responseData = getResponseData(json);
 
         dispatch(receiveInitialDataAction(responseData));
+      })
+      .catch((error) => {
+        dispatch(failInitialDataAction(error.message));
       });
     /*eslint-enable */
   };

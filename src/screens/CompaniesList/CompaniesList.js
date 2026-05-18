@@ -8,32 +8,24 @@ import DetailsList from "../CompanyDetailsList/CompanyDetailsList";
 
 const CompaniesList = ({ GetInitialData, UpdateProject, state }) => {
   const [currentlyOpennedCompany, setCurrentlyOpennedCompany] = useState(false);
-  const [currentCompanyProjects, setCurrentCompanyProjects] = useState(false);
-  const [currentCompanyEmployees, setCurrentCompanyEmployees] = useState(false);
+  const [currentCompanyProjects, setCurrentCompanyProjects] = useState([]);
+  const [currentCompanyEmployees, setCurrentCompanyEmployees] = useState([]);
 
-  const [companies, setComapnies] = useState(false);
-  const [projects, setProjects] = useState(false);
-  const [employees, setEmployees] = useState(false);
-  const [companyAddresses, setCompanyAddresses] = useState(false);
+  const homeState = state.home;
+  const data = homeState.data;
+  const companies = data ? data.companies || [] : [];
+  const projects = data ? data.projects || [] : [];
+  const employees = data ? data.employees || [] : [];
+  const companyAddresses = data ? data["company-addresses"] || [] : [];
 
   useEffect(() => {
-    if (!state.home.data) {
+    if (!data && !homeState.loading && !homeState.error) {
       GetInitialData();
     }
-
-    const tempCompanies = state.home.data.companies;
-    const tempProjects = state.home.data.projects;
-    const tempEmployees = state.home.data.employees;
-    const tempCompanyAddresses = state.home.data["company-addresses"];
-
-    setComapnies(tempCompanies);
-    setProjects(tempProjects);
-    setEmployees(tempEmployees);
-    setCompanyAddresses(tempCompanyAddresses);
-  }, [state.home.data, GetInitialData]);
+  }, [data, homeState.loading, homeState.error, GetInitialData]);
 
   useEffect(() => {
-    if (projects) {
+    if (currentlyOpennedCompany) {
       const currentProjects = projects.filter(
         (project) => project.companyId === currentlyOpennedCompany.id
       );
@@ -46,21 +38,40 @@ const CompaniesList = ({ GetInitialData, UpdateProject, state }) => {
     }
   }, [currentlyOpennedCompany, projects, employees]);
 
+  if (homeState.error) {
+    return (
+      <div className="treeWrapper">
+        <div className="treeContainer">
+          <div className="treeTitle">Directory unavailable</div>
+          <div className="addressDepartmentTitle">{homeState.error}</div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!data || homeState.loading) {
+    return (
+      <div className="treeWrapper">
+        <div className="treeContainer">
+          <div className="treeTitle">Loading directory...</div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="treeWrapper">
       <div className="treeContainer">
         <div className="treeTitle">Companies</div>
-        {companies
-          ? companies.map((company) => {
-              return (
-                <CompanyButton
-                  key={company.id}
-                  company={company}
-                  setCurrentlyOpenned={setCurrentlyOpennedCompany}
-                ></CompanyButton>
-              );
-            })
-          : null}
+        {companies.map((company) => {
+          return (
+            <CompanyButton
+              key={company.id}
+              company={company}
+              setCurrentlyOpenned={setCurrentlyOpennedCompany}
+            ></CompanyButton>
+          );
+        })}
       </div>
 
       {currentlyOpennedCompany && (
